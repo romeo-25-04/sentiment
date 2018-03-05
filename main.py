@@ -12,10 +12,10 @@ def main():
 
     # get dataset
     train_set = DataSet()
-    train_set.from_file('var/train_set.pred')
+    train_set.from_file('var/train_set.gs')
     pp.pprint(train_set.tweets[:2])
 
-    # with open('var/result.pred', mode='w') as out_f:
+    # with open('var/dataset_name.pred', mode='w') as out_f:
     #     out_f.write(str(train_set))
 
 
