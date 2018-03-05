@@ -1,5 +1,9 @@
 from polar_dictionary.pol_dict import PolarityDict
 from preprocess_data.get_data import DataSet
+from preprocess_data.feature_extractor import TweetFeatureExtractor
+from trainer.trainer import Trainer
+from tagger.tagger import SentimentTagger
+
 import pprint
 pp = pprint.PrettyPrinter(indent=2, width=200)
 
@@ -15,8 +19,44 @@ def main():
     train_set.from_file('var/train_set.gs')
     pp.pprint(train_set.tweets[:2])
 
-    # with open('var/dataset_name.pred', mode='w') as out_f:
-    #     out_f.write(str(train_set))
+    # get features
+    features_list, labels = [], []
+    for tweet in train_set.tweets:
+        tweet_features = TweetFeatureExtractor(tweet)
+        features_list.append(tweet_features.features)
+        labels.append(tweet.polarity)
+
+    pp.pprint(features_list[:2])
+    pp.pprint(labels[:2])
+
+    # # train the crf-trainer
+    # trainer = Trainer()
+    # trainer.feed_trainer(features_list, labels)
+    # trainer.train('var/')
+    #
+    # # get the test-set
+    # test_set = DataSet()
+    # test_set.from_file('var/test_set_dev.gs')
+    # pp.pprint(test_set.tweets[:2])
+    #
+    # # tag test-set
+    # tagger = SentimentTagger()
+    # tagger.load_model('var/sentiment_arow.model')
+    #
+    # tweet_features_list = [TweetFeatureExtractor(tweet).features
+    #     for tweet in test_set.tweets
+    # ]
+    #
+    # pred_labels = tagger.tag_tweets(tweet_features_list)
+    #
+    # for i, tweet in enumerate(test_set.tweets):
+    #     tweet.polarity = pred_labels[i]
+    #
+    # print(test_set.tweets[1])
+    #
+    # # write output
+    # with open('var/test_set_dev.pred', mode='w') as out_f:
+    #     out_f.write(str(test_set))
 
 
 if __name__ == '__main__':
