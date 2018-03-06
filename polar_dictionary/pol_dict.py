@@ -1,6 +1,10 @@
+from nltk.stem import PorterStemmer
+
 class PolarityDict:
     def __init__(self):
         self.words = dict()
+        self.polarities = set()
+        self.poss = set()
 
     def from_file(self, path):
         '''
@@ -20,9 +24,13 @@ class PolarityDict:
                 [tuple(item.split('=')) for item in line]
                 for line in lines
             ]
+            ps = PorterStemmer()
             lines = [dict(line) for line in lines]
-            self.words = dict((line.get('word1')+'_'+line.get('pos1'), line.get('priorpolarity'))
+            self.words = dict((ps.stem(line.get('word1')), #+'_'+line.get('pos1'),
+                               line.get('priorpolarity'))
                               for line in lines)
+            self.polarities = set([line.get('priorpolarity') for line in lines])
+            self.poss = set([line.get('pos1') for line in lines])
 
     def from_str(self, pol_str):
         '''
