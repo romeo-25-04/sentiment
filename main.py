@@ -34,11 +34,11 @@ def main():
         features_list.append(tweet_features.features)
         labels.append(tweet.polarity)
 
-    pp.pprint(features_list[:2])
-    pp.pprint(labels[:2])
+    pp.pprint(features_list[:14])
+    pp.pprint(labels[:14])
 
     # train the crf-trainer
-    trainer = Trainer()
+    trainer = Trainer(algorithm=3)
     trainer.feed_trainer(features_list, labels)
     trainer.train('var/')
 
@@ -49,7 +49,7 @@ def main():
 
     # tag test-set
     tagger = SentimentTagger()
-    tagger.load_model('var/sentiment_arow.model')
+    tagger.load_model('var/sentiment_lbfgs.model')
 
     tweet_features_list = [TweetFeatureExtractor(tweet, word_model, polar_dict=polar.words).features
         for tweet in test_set.tweets
