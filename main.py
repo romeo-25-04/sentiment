@@ -5,6 +5,7 @@ from preprocess_data.feature_extractor import TweetFeatureExtractor
 from trainer.trainer import Trainer
 from tagger.tagger import SentimentTagger
 
+TRAIN_AND_TAG = True
 
 import pprint
 pp = pprint.PrettyPrinter(indent=2, width=200)
@@ -22,25 +23,26 @@ def main():
 
     word_model = gensim.models.Word2Vec.load('var/my_word_model')
 
-    # get dataset
-    train_set = DataSet()
-    train_set.from_file('var/train_set.gs')
-    pp.pprint(train_set.tweets[:2])
+    if TRAIN_AND_TAG:
+        # get dataset
+        train_set = DataSet()
+        train_set.from_file('var/train_set.gs')
+        pp.pprint(train_set.tweets[:2])
 
-    # get features
-    features_list, labels = [], []
-    for tweet in train_set.tweets:
-        tweet_features = TweetFeatureExtractor(tweet, word_model, polar_dict=polar.words)
-        features_list.append(tweet_features.features)
-        labels.append(tweet.polarity)
+        # get features
+        features_list, labels = [], []
+        for tweet in train_set.tweets:
+            tweet_features = TweetFeatureExtractor(tweet, word_model, polar_dict=polar.words)
+            features_list.append(tweet_features.features)
+            labels.append(tweet.polarity)
 
-    pp.pprint(features_list[:14])
-    pp.pprint(labels[:14])
+        pp.pprint(features_list[:14])
+        pp.pprint(labels[:14])
 
-    # train the crf-trainer
-    trainer = Trainer(algorithm=3)
-    trainer.feed_trainer(features_list, labels)
-    trainer.train('var/')
+        # train the crf-trainer
+        trainer = Trainer(algorithm=3)
+        trainer.feed_trainer(features_list, labels)
+        trainer.train('var/')
 
     # get the test-set
     test_set = DataSet()

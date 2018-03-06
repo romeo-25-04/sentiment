@@ -12,8 +12,15 @@ class TweetFeatureExtractor:
     def tweet_features(self):
         nr_tokens = len(self.tweet.tokens)
         polarities = [self.polar_dict.get(stemm, 'neutral') for stemm in self.tweet.stemms]
+        max_polar = dict()
+        for item in polarities:
+            if item != 'neutral':
+                val = max_polar.get(item, 0) + 1
+                max_polar[item] = val
+
         features = {
             'stemms': self.tweet.stemms,
+            'max_pol': max(max_polar, key=lambda key: max_polar[key]),
             'positive': len([pol for pol in polarities if pol == 'positive']),
             'negative': len([pol for pol in polarities if pol == 'negative']),
             'neutral': len([pol for pol in polarities if pol == 'neutral']),
