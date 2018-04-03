@@ -1,6 +1,6 @@
 class TweetFeatureExtractor:
     NEGATIONS = ["n't", 'not']
-    POS_EMOTES = [(':', ')')]
+    POS_EMOTES = [(':', ')'), (':', 'D'), ('X', 'D'), (';', ')')]
     NEG_EMOTES = [(':', '(')]
 
     def __init__(self, tweet, word_model, polar_dict=dict(), training=True):
